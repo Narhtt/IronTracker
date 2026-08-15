@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <rect width="512" height="512" rx="120" fill="#0d1117"/>
+  <!-- Barre -->
+  <rect x="100" y="236" width="312" height="40" rx="10" fill="#30363d"/>
+  <!-- Poids Gauche -->
+  <rect x="100" y="156" width="40" height="200" rx="12" fill="#58a6ff"/>
+  <rect x="60" y="180" width="30" height="152" rx="8" fill="#58a6ff" opacity="0.7"/>
+  <!-- Poids Droit -->
+  <rect x="372" y="156" width="40" height="200" rx="12" fill="#58a6ff"/>
+  <rect x="422" y="180" width="30" height="152" rx="8" fill="#58a6ff" opacity="0.7"/>
+  <!-- Éclair -->
+  <path d="M280 120 L230 256 H270 L220 392 L320 236 H270 Z" fill="#ffffff" stroke="#0d1117" stroke-width="10"/>
+</svg>

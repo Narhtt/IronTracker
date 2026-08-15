@@ -1,0 +1,52 @@
+{
+  "name": "irontracker",
+  "private": true,
+  "version": "4.0.6-rc.2",
+  "type": "module",
+  "scripts": {
+    "icons": "node scripts/generate-icons.mjs",
+    "predev": "node scripts/generate-icons.mjs",
+    "prebuild": "node scripts/generate-icons.mjs",
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint .",
+    "format": "prettier --write .",
+    "test": "vitest run",
+    "test:watch": "vitest"
+  },
+  "dependencies": {
+    "@fontsource/inter": "^5.2.6",
+    "@fontsource/jetbrains-mono": "^5.2.6",
+    "@remix-run/router": "1.23.3",
+    "html2canvas": "^1.4.1",
+    "html2canvas-pro": "^2.3.8",
+    "lz-string": "1.5.0",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-router-dom": "6.30.4",
+    "recharts": "2.12.7",
+    "zustand": "4.5.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.14.0",
+    "@types/react": "^18.3.31",
+    "@types/react-dom": "^18.3.7",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "~5.8.2",
+    "vite": "^6.2.0",
+    "tailwindcss": "^4.1.10",
+    "@tailwindcss/vite": "^4.1.10",
+    "eslint": "^9.29.0",
+    "@eslint/js": "^9.29.0",
+    "typescript-eslint": "^8.34.0",
+    "eslint-plugin-react-hooks": "^5.2.0",
+    "eslint-plugin-react-refresh": "^0.4.19",
+    "globals": "^15.15.0",
+    "prettier": "^3.5.3",
+    "eslint-config-prettier": "^10.1.5",
+    "vitest": "^3.2.4",
+    "jsdom": "^30.0.1",
+    "sharp": "^0.35.3"
+  }
+}

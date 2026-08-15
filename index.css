@@ -1,0 +1,223 @@
+@import 'tailwindcss';
+@import '@fontsource/inter/400.css';
+@import '@fontsource/inter/500.css';
+@import '@fontsource/inter/600.css';
+@import '@fontsource/inter/700.css';
+@import '@fontsource/inter/900.css';
+@import '@fontsource/jetbrains-mono/400.css';
+@import '@fontsource/jetbrains-mono/700.css';
+
+/* html.dark / html.light are toggled manually by the app (see App.tsx), independent of OS preference */
+@custom-variant dark (&:where(.dark, .dark *));
+
+@theme {
+  --color-background: rgb(var(--background));
+  --color-surface: rgb(var(--surface));
+  --color-surface2: rgb(var(--surface-2));
+
+  --color-foreground: rgb(var(--foreground));
+  --color-secondary: rgb(var(--muted));
+
+  --color-border: rgb(var(--border));
+
+  --color-primary: rgb(var(--primary));
+  --color-success: rgb(var(--success));
+  --color-danger: rgb(var(--danger));
+  --color-warning: rgb(var(--warning));
+  --color-gold: rgb(var(--warning));
+  --color-orange: #ff5f1f;
+
+  --font-sans: 'Inter', sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  --animate-fade-in: fadeIn 0.2s ease-out forwards;
+  --animate-zoom-in: zoomIn 0.3s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+  --animate-slide-in-bottom: slideInBottom 0.3s cubic-bezier(0.2, 0, 0.2, 1) forwards;
+  --animate-pulse-slow: pulseSubtle 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  --animate-glow: glow 3s infinite;
+  --animate-flash-success: flashSuccess 0.4s ease-out;
+  --animate-flash-warning: flashWarning 0.6s ease-out;
+  --animate-flash-error: flashError 0.4s ease-out;
+
+  @keyframes fadeIn {
+    0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+  }
+  @keyframes zoomIn {
+    0% {
+      opacity: 0;
+      transform: scale(0.96);
+    }
+    100% {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  @keyframes slideInBottom {
+    0% {
+      transform: translateY(100%);
+    }
+    100% {
+      transform: translateY(0);
+    }
+  }
+  @keyframes pulseSubtle {
+    0%,
+    100% {
+      opacity: 1;
+    }
+    50% {
+      opacity: 0.8;
+    }
+  }
+  @keyframes glow {
+    0%,
+    100% {
+      box-shadow: 0 0 15px var(--primary-glow);
+    }
+    50% {
+      box-shadow: 0 0 25px var(--primary-glow);
+    }
+  }
+  @keyframes flashSuccess {
+    0% {
+      opacity: 0;
+      box-shadow: inset 0 0 0 4px transparent;
+    }
+    10% {
+      opacity: 1;
+      box-shadow: inset 0 0 0 4px rgb(var(--success));
+    }
+    100% {
+      opacity: 0;
+      box-shadow: inset 0 0 0 4px transparent;
+    }
+  }
+  @keyframes flashWarning {
+    0% {
+      opacity: 0;
+      box-shadow: inset 0 0 0 4px transparent;
+    }
+    10% {
+      opacity: 1;
+      box-shadow: inset 0 0 0 4px rgb(var(--warning));
+    }
+    100% {
+      opacity: 0;
+      box-shadow: inset 0 0 0 4px transparent;
+    }
+  }
+  @keyframes flashError {
+    0% {
+      opacity: 0;
+      box-shadow: inset 0 0 0 4px transparent;
+    }
+    10% {
+      opacity: 1;
+      box-shadow: inset 0 0 0 4px rgb(var(--danger));
+    }
+    100% {
+      opacity: 0;
+      box-shadow: inset 0 0 0 4px transparent;
+    }
+  }
+}
+
+/* --- THEME TOKENS --- */
+
+/* DEFAULT (DARK MODE) */
+:root {
+  --background: 2 6 23; /* Slate 950 */
+  --surface: 15 23 42; /* Slate 900 */
+  --surface-2: 30 41 59; /* Slate 800 */
+  --foreground: 255 255 255; /* White */
+  --muted: 148 163 184; /* Slate 400 */
+  --border: 51 65 85; /* Slate 700 */
+
+  --primary: 88 166 255; /* Blue Default */
+  --primary-glow: rgba(88, 166, 255, 0.3);
+
+  --success: 0 225 122; /* #00e17a */
+  --warning: 255 210 31; /* #ffd21f */
+  --danger: 240 66 72; /* #f04248 */
+
+  /* Gradient Dark */
+  --body-gradient: radial-gradient(circle at top left, rgb(var(--surface-2)) 0%, rgb(var(--background)) 40%, #000000 100%);
+}
+
+/* LIGHT MODE OVERRIDES */
+html.light {
+  --background: 241 245 249; /* Slate 100 - Base légère */
+  --surface: 255 255 255; /* White - Cartes propres */
+  --surface-2: 226 232 240; /* Slate 200 - Éléments secondaires */
+  --foreground: 15 23 42; /* Slate 900 - Texte sombre */
+  --muted: 100 116 139; /* Slate 500 - Texte secondaire */
+  --border: 203 213 225; /* Slate 300 - Bordures douces */
+
+  /* Gradient Light: Subtle white/grey */
+  --body-gradient: radial-gradient(circle at top left, #ffffff 0%, rgb(var(--background)) 100%);
+}
+
+body {
+  background-color: rgb(var(--background));
+  background-image: var(--body-gradient);
+  background-attachment: fixed;
+  color: rgb(var(--foreground));
+  -webkit-tap-highlight-color: transparent;
+  font-family: 'Inter', sans-serif;
+  transition:
+    color 0.3s ease,
+    background-color 0.3s ease;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.no-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+input[type='number']::-webkit-inner-spin-button,
+input[type='number']::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Glassmorphism - Adapts to theme automatically via vars */
+.glass {
+  background: rgb(var(--surface-2) / 0.5); /* 0.5 opacity for better light mode contrast */
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(var(--foreground), 0.05); /* Adaptive border color */
+}
+
+/* Staggered Animations */
+.delay-75 {
+  animation-delay: 75ms;
+}
+.delay-100 {
+  animation-delay: 100ms;
+}
+.delay-150 {
+  animation-delay: 150ms;
+}
+.delay-200 {
+  animation-delay: 200ms;
+}
+.delay-300 {
+  animation-delay: 300ms;
+}
+.delay-400 {
+  animation-delay: 400ms;
+}
+.delay-500 {
+  animation-delay: 500ms;
+}
+
+.animate-zoom-in {
+  opacity: 0;
+}
