@@ -464,19 +464,49 @@ export const SettingsView: React.FC<SettingsViewProps> = ({ installPrompt }) => 
 
       {/* ARCHIVAGE & STOCKAGE */}
       <SectionCard className="p-6 space-y-4">
-        <div className="flex justify-between items-center">
-          <div>
-            <h3 className="text-sm font-bold uppercase tracking-wider text-secondary">Archivage de l'Historique</h3>
-            <p className="text-[10px] text-secondary/70">
-              Espace utilisé : {storageUsage.formatted} ({storageUsage.percentage}%)
-            </p>
+        <div>
+          <div className="flex justify-between items-center mb-2">
+            <div>
+              <h3 className="text-sm font-bold uppercase tracking-wider text-secondary">Stockage & Archivage</h3>
+              <p className="text-[10px] text-secondary/70">
+                Espace Local-First utilisé : <span className="font-bold text-foreground">{storageUsage.formatted}</span> sur 5 Mo ({storageUsage.percentage}%)
+              </p>
+            </div>
+            <span className={`text-[10px] font-bold px-2 py-0.5 rounded-full ${
+              storageUsage.isNearLimit
+                ? 'bg-danger/20 text-danger border border-danger/30 animate-pulse'
+                : storageUsage.percentage > 60
+                ? 'bg-amber-500/20 text-amber-400 border border-amber-500/30'
+                : 'bg-primary/10 text-primary border border-primary/20'
+            }`}>
+              {storageUsage.isNearLimit ? '⚠️ Espace critique' : 'Compression LZ Active'}
+            </span>
           </div>
-          <div className="w-20 bg-surface2 h-2 rounded-full overflow-hidden border border-white/5">
+
+          <div className="w-full bg-surface2 h-2.5 rounded-full overflow-hidden border border-white/5 relative">
             <div
-              className={`h-full ${storageUsage.isNearLimit ? 'bg-danger' : 'bg-primary'}`}
-              style={{ width: `${Math.max(4, storageUsage.percentage)}%` }}
+              className={`h-full transition-all duration-500 ${
+                storageUsage.isNearLimit
+                  ? 'bg-danger'
+                  : storageUsage.percentage > 60
+                  ? 'bg-amber-400'
+                  : 'bg-primary'
+              }`}
+              style={{ width: `${Math.max(3, storageUsage.percentage)}%` }}
             />
           </div>
+
+          {storageUsage.isNearLimit && (
+            <div className="mt-3 p-3 bg-danger/10 border border-danger/30 rounded-xl flex items-start gap-2.5">
+              <span className="text-danger text-base">⚠️</span>
+              <div className="text-xs text-foreground">
+                <p className="font-bold text-danger">Stockage local presque saturé ({storageUsage.percentage}%)</p>
+                <p className="text-[11px] text-secondary mt-0.5">
+                  Il est vivement conseillé de faire une <strong>Sauvegarde Globale JSON</strong> et d'archiver vos séances les plus anciennes pour libérer de l'espace.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
         {historyRange.totalSessions > 0 && (

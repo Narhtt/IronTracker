@@ -1,5 +1,15 @@
 # IronTracker
 
+[![Version](https://img.shields.io/badge/version-4.0.7-blue.svg?style=flat-square)](./changelogs.md)
+[![React](https://img.shields.io/badge/React-18-61dafb.svg?style=flat-square&logo=react)](https://react.dev/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.x-3178c6.svg?style=flat-square&logo=typescript)](https://www.typescriptlang.org/)
+[![Vite](https://img.shields.io/badge/Vite-6-646cff.svg?style=flat-square&logo=vite)](https://vitejs.dev/)
+[![TailwindCSS](https://img.shields.io/badge/Tailwind-4.x-38bdf8.svg?style=flat-square&logo=tailwindcss)](https://tailwindcss.com/)
+[![Tests](https://img.shields.io/badge/Tests-49%20passed%20(Vitest)-success.svg?style=flat-square&logo=vitest)](https://vitest.dev/)
+[![Status](https://img.shields.io/badge/Status-Stable%20Release-emerald.svg?style=flat-square)](#)
+[![PWA](https://img.shields.io/badge/PWA-Offline%20First-orange.svg?style=flat-square)](#)
+[![License](https://img.shields.io/badge/license-MIT-green.svg?style=flat-square)](#)
+
 Application Progressive Web App (PWA) de suivi de performance pour la musculation et la force athlétique, conçue selon les principes **Local-First**, **zéro tracking** et **haute vélocité de saisie**.
 
 ---
@@ -94,6 +104,10 @@ Pour assurer une cohérence visuelle immédiate entre les graphiques, le calendr
 ---
 
 ## 6. Installation & Développement
+
+### Prérequis
+- **Node.js** `>= 20.18.0` (Node.js 22 LTS recommandé)
+- **npm** `>= 9.0.0`
 
 ```bash
 # 1. Cloner le projet

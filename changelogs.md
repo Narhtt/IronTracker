@@ -1,19 +1,22 @@
 # Changelog IronTracker
 
-## [4.0.6-rc.2] - 2026-08-16
-### Optimisation, Refactoring & Robustesse (Phase Post-Audit)
+## [4.0.7] - 2026-08-16
+### Production Release & Durcissement Final
+- **Contrôle & UX du Stockage Local (Local-First)** :
+  - Intégration d'une jauge de capacité temps réel dans les Paramètres affichant l'empreinte exacte sur les 5 Mo alloués par le navigateur.
+  - Alerte contextuelle dynamique (>80% d'occupation) incitant à la sauvegarde globale JSON et à l'archivage préventif des séances historiques.
+  - Indicateur visuel d'activation de la compression LZ-String.
+- **Sécurisation & Conformité Environnement** :
+  - Déclaration explicite des moteurs d'exécution (`Node.js >= 20.18.0 / 22 LTS` et `npm >= 9.0.0`) dans `package.json` et `README.md`.
+  - Résolution des alertes de sécurité et conformité des paquets.
 - **Modularisation de `core/utils/`** :
   - Découpage du fichier monolithique en sous-modules thématiques purs : `calculations.ts` (1RM, chargement des disques, séries d'échauffement progressif, réordonnancement), `formatters.ts` (durées, inputs temps cardio/statique, statistiques historiques d'exercices, exports CSV) et `haptics.ts` (vibrations et signaux visuels avec garde d'incompatibilité).
   - Mise en place d'un barrel export unifié (`core/utils/index.ts` et `core/utils.ts`) assurant une compatibilité ascendante totale sans rupture d'import.
 - **Sécurisation & Résilience de l'Application** :
   - Intégration d'un `ErrorBoundary` React global avec interface de récupération automatique, détection intelligente des rechargements de modules asynchrones (*ChunkLoadError / dynamic fetch*) et purge sélective du cache.
   - Sécurisation des accès directs au stockage local avec gestion gracieuse des quotas et des modes de navigation privée stricts.
-- **Suite de Tests Unitaires Enrichie (Vitest)** :
-  - Validation automatisée des formules de 1RM (Wathen, Epley, Brzycki, Average) et gestion des valeurs limites.
-  - Validation exhaustive de l'algorithme de chargement de disques (`calculatePlates`) en kilogrammes et en livres (lbs).
-  - Validation des calculs d'échauffement dynamique et de calibration sur 1RM historique (`generateWarmupSeries`).
-  - Validation du parsing et formatage des durées (`formatDuration`, `parseDuration`, `smartFormatTime`).
-  - 100% des tests passants (49 tests unitaires).
+- **Suite de Tests Unitaires (Vitest)** :
+  - 49 tests unitaires automatisés validés à 100% sur 6 suites de tests.
 
 ## [4.0.6] - 2026-08-16
 ### Ajouts / Modifications (Phase B - Volet Métier, Visualisation & Régularité)
