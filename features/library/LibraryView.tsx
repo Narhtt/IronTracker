@@ -1,10 +1,11 @@
 import React, { useState, useMemo } from 'react';
 import { useStore } from '../../store/useStore';
-import { LibraryExercise } from '../../core/types';
+import { LibraryExercise, ExerciseType } from '../../core/types';
 import { triggerHaptic } from '../../core/utils';
 import { Icons } from '../../components/icons/Icons';
 import { TYPE_COLORS } from '../../core/constants';
 import { EQUIPMENTS } from '../../core/data/equipments';
+import { EXERCISE_TYPE_LIST } from '../../core/data/exerciseTypes';
 import { Modal } from '../../components/ui/Modal';
 import { useConfirm } from '../../hooks/useConfirm';
 import { ExerciseDetailModal } from './components/ExerciseDetailModal';

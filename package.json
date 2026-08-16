@@ -1,7 +1,7 @@
 {
   "name": "irontracker",
   "private": true,
-  "version": "4.0.6",
+  "version": "4.0.6-rc.2",
   "type": "module",
   "scripts": {
     "icons": "node scripts/generate-icons.mjs",
