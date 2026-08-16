@@ -496,12 +496,27 @@ export const WorkoutView: React.FC = () => {
           }}
         >
           <div className="space-y-4">
-            <input
-              placeholder="Rechercher..."
-              className="w-full bg-surface2 p-3 rounded-xl outline-none text-foreground placeholder-secondary/50"
-              onChange={(e) => setLibraryFilter(e.target.value)}
-              autoFocus
-            />
+            <div className="bg-surface2 p-2 rounded-xl flex items-center gap-2 border border-transparent focus-within:border-primary/50 transition-colors">
+              <span className="text-secondary pl-2">
+                <Icons.Search size={16} />
+              </span>
+              <input
+                placeholder="Rechercher (nom, muscle...)"
+                className="bg-transparent w-full p-1 outline-none text-sm font-bold text-foreground placeholder-secondary/50"
+                value={libraryFilter}
+                onChange={(e) => setLibraryFilter(e.target.value)}
+                autoFocus
+              />
+              {libraryFilter && (
+                <button
+                  type="button"
+                  onClick={() => setLibraryFilter('')}
+                  className="p-1 text-secondary hover:text-white transition-colors"
+                >
+                  ✕
+                </button>
+              )}
+            </div>
             <div className="max-h-60 overflow-y-auto space-y-2">
               {library
                 .filter(

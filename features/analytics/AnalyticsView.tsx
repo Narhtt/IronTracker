@@ -4,14 +4,17 @@ import { useAnalyticsData } from './hooks/useAnalyticsData';
 // Components
 import { AnalyticsHeader } from './components/AnalyticsHeader';
 import { OverviewCards } from './components/OverviewCards';
+import { ActivityHeatmap } from './components/ActivityHeatmap';
 import { VolumeFatigueChart } from './components/VolumeFatigueChart';
 import { WeeklyVolumeChart } from './components/WeeklyVolumeChart';
 import { EquipmentDonut } from './components/EquipmentDonut';
 import { SBDRadar } from './components/SBDRadar';
 import { ExerciseDetailChart } from './components/ExerciseDetailChart';
 import { SBDInfoModal, VolumeInfoModal, FatigueInfoModal, EquipmentInfoModal } from './components/AnalyticsModals';
+import { useStore } from '../../store/useStore';
 
 export const AnalyticsView: React.FC = () => {
+  const weightUnit = useStore((s) => s.weightUnit);
   const {
     period,
     setPeriod,
@@ -23,6 +26,7 @@ export const AnalyticsView: React.FC = () => {
     setVolumeMode,
     isTimeBased,
     isCardio,
+    history,
     library,
     overviewStats,
     volFatigueData,
@@ -43,6 +47,9 @@ export const AnalyticsView: React.FC = () => {
       <AnalyticsHeader period={period} setPeriod={setPeriod} />
 
       <OverviewCards stats={overviewStats} />
+
+      {/* HEATMAP DE RÉGULARITÉ ANNUELLE (52 SEMAINES / STYLE GITHUB) */}
+      <ActivityHeatmap history={history} library={library} weightUnit={weightUnit} />
 
       <VolumeFatigueChart data={volFatigueData} onInfoClick={() => setShowFatigueInfo(true)} />
 

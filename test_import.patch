@@ -1,8 +1,0 @@
---- App.tsx
-+++ App.tsx
-@@ -23,7 +23,7 @@
- 
- // Lazy load heavier views
--const AnalyticsView = React.lazy(() => import('./features/analytics/AnalyticsView').then((m) => ({ default: m.AnalyticsView })));
-+import { AnalyticsView } from './features/analytics/AnalyticsView';
- const HistoryHubView = React.lazy(() => import('./features/history/HistoryHubView').then((m) => ({ default: m.HistoryHubView })));

@@ -96,14 +96,16 @@ export const SessionDetailModal: React.FC<SessionDetailModalProps> = ({ session,
     triggerHaptic('click');
 
     try {
-      await new Promise((r) => setTimeout(r, 60));
+      if (document.fonts) {
+        await document.fonts.ready;
+      }
+      await new Promise((r) => setTimeout(r, 100));
 
       const canvas = await html2canvas(captureRef.current, {
         scale: 3,
-        backgroundColor: exportStyle === 'social' ? '#0f172a' : '#020617',
+        backgroundColor: exportStyle === 'social' ? '#0b1120' : '#070b14',
         useCORS: true,
         logging: false,
-        windowWidth: 420,
       });
 
       canvas.toBlob((blob: Blob | null) => {
@@ -135,14 +137,16 @@ export const SessionDetailModal: React.FC<SessionDetailModalProps> = ({ session,
     triggerHaptic('click');
 
     try {
-      await new Promise((r) => setTimeout(r, 60));
+      if (document.fonts) {
+        await document.fonts.ready;
+      }
+      await new Promise((r) => setTimeout(r, 100));
 
       const canvas = await html2canvas(captureRef.current, {
         scale: 3,
-        backgroundColor: exportStyle === 'social' ? '#0f172a' : '#020617',
+        backgroundColor: exportStyle === 'social' ? '#0b1120' : '#070b14',
         useCORS: true,
         logging: false,
-        windowWidth: 420,
       });
 
       canvas.toBlob(async (blob: Blob | null) => {
@@ -227,100 +231,256 @@ export const SessionDetailModal: React.FC<SessionDetailModalProps> = ({ session,
         </div>
 
         {/* RECEIPT / SOCIAL CARD CONTAINER */}
-        <div ref={captureRef}>
+        <div ref={captureRef} style={{ width: '100%' }}>
           {exportStyle === 'receipt' ? (
             /* STYLE 1: TICKET DE CAISSE THERMIQUE */
-            <div className="bg-background rounded-2xl p-5 font-mono text-xs text-secondary/80 leading-relaxed border-t-4 border-dashed border-primary/50 relative overflow-hidden shadow-2xl">
-              <div className="text-center pb-4 border-b border-dashed border-white/20 mb-4 space-y-2 relative z-10">
-                <div className="uppercase tracking-[0.2em] text-[8px] text-secondary/40 font-bold">IronTracker System Log</div>
-                <div className="text-2xl font-black text-foreground uppercase break-words tracking-tight">{session.sessionName}</div>
-                <div className="flex flex-wrap justify-center items-center gap-x-3 gap-y-1 text-[10px] font-bold text-secondary">
-                  <span className="bg-white/5 px-2 py-0.5 rounded border border-white/5">{session.programName}</span>
+            <div
+              style={{
+                backgroundColor: '#070b14',
+                color: '#cbd5e1',
+                fontFamily: "'JetBrains Mono', 'Courier New', Courier, monospace",
+                borderRadius: '16px',
+                padding: '20px',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderTop: '4px dashed #eab308',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.5)',
+                lineHeight: 1.5,
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+              className="text-xs space-y-4"
+            >
+              {/* Header */}
+              <div
+                style={{
+                  textAlign: 'center',
+                  paddingBottom: '16px',
+                  borderBottom: '1px dashed rgba(255, 255, 255, 0.15)',
+                  marginBottom: '16px',
+                }}
+                className="space-y-2 relative z-10"
+              >
+                <div
+                  style={{
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.2em',
+                    fontSize: '8px',
+                    color: '#64748b',
+                    fontWeight: 700,
+                  }}
+                >
+                  IronTracker System Log
+                </div>
+                <div
+                  style={{
+                    fontSize: '20px',
+                    fontWeight: 900,
+                    color: '#f8fafc',
+                    textTransform: 'uppercase',
+                    wordBreak: 'break-word',
+                    letterSpacing: '-0.025em',
+                  }}
+                >
+                  {session.sessionName}
+                </div>
+                <div
+                  style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    justifyContent: 'center',
+                    alignItems: 'center',
+                    gap: '8px',
+                    fontSize: '10px',
+                    fontWeight: 700,
+                    color: '#94a3b8',
+                  }}
+                >
+                  <span
+                    style={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                      padding: '2px 8px',
+                      borderRadius: '4px',
+                      border: '1px solid rgba(255, 255, 255, 0.1)',
+                      color: '#cbd5e1',
+                    }}
+                  >
+                    {session.programName}
+                  </span>
                   <span>{dateTimeInfo.dateStr}</span>
-                  <span className="opacity-50 text-[8px]">•</span>
+                  <span style={{ opacity: 0.5, fontSize: '8px' }}>•</span>
                   <span>{dateTimeInfo.timeRange}</span>
                 </div>
               </div>
 
               {/* KEY METRICS ROW */}
-              <div className="grid grid-cols-4 gap-2 text-center pb-4 border-b border-dashed border-white/20 mb-4 relative z-10">
-                <div className="flex flex-col">
-                  <span className="text-[8px] uppercase opacity-50 mb-1">Durée</span>
-                  <span className="font-bold text-foreground text-sm">
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+                  gap: '8px',
+                  textAlign: 'center',
+                  paddingBottom: '16px',
+                  borderBottom: '1px dashed rgba(255, 255, 255, 0.15)',
+                  marginBottom: '16px',
+                }}
+                className="relative z-10"
+              >
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: '8px', textTransform: 'uppercase', color: '#64748b', marginBottom: '4px' }}>
+                    Durée
+                  </span>
+                  <span style={{ fontWeight: 700, color: '#f8fafc', fontSize: '14px' }}>
                     {stats.duration}
-                    <span className="text-[10px] font-normal opacity-70">m</span>
+                    <span style={{ fontSize: '10px', fontWeight: 400, opacity: 0.7 }}>m</span>
                   </span>
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-[8px] uppercase opacity-50 mb-1">Sets</span>
-                  <span className="font-bold text-foreground text-sm">{stats.totalSets}</span>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: '8px', textTransform: 'uppercase', color: '#64748b', marginBottom: '4px' }}>
+                    Sets
+                  </span>
+                  <span style={{ fontWeight: 700, color: '#f8fafc', fontSize: '14px' }}>{stats.totalSets}</span>
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-[8px] uppercase opacity-50 mb-1">Vol.</span>
-                  <span className="font-bold text-foreground text-sm">
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: '8px', textTransform: 'uppercase', color: '#64748b', marginBottom: '4px' }}>
+                    Vol.
+                  </span>
+                  <span style={{ fontWeight: 700, color: '#f8fafc', fontSize: '14px' }}>
                     {(stats.totalVolume / 1000).toFixed(1)}
-                    <span className="text-[10px] font-normal opacity-70">k</span>
+                    <span style={{ fontSize: '10px', fontWeight: 400, opacity: 0.7 }}>k</span>
                   </span>
                 </div>
-                <div className="flex flex-col">
-                  <span className="text-[8px] uppercase opacity-50 mb-1">RPE</span>
-                  <span className="font-bold text-sm" style={{ color: FATIGUE_COLORS[session.fatigue] }}>
+                <div style={{ display: 'flex', flexDirection: 'column' }}>
+                  <span style={{ fontSize: '8px', textTransform: 'uppercase', color: '#64748b', marginBottom: '4px' }}>
+                    RPE
+                  </span>
+                  <span style={{ fontWeight: 700, fontSize: '14px', color: FATIGUE_COLORS[session.fatigue] }}>
                     {session.fatigue}/5
                   </span>
                 </div>
               </div>
 
               {/* INTENSITY GAUGE */}
-              <div className="pb-4 border-b border-dashed border-white/20 mb-4 relative z-10 space-y-2">
-                <div className="flex justify-between items-end">
-                  <span className="text-[8px] uppercase font-bold text-secondary">Intensité Relative</span>
+              <div
+                style={{
+                  paddingBottom: '16px',
+                  borderBottom: '1px dashed rgba(255, 255, 255, 0.15)',
+                  marginBottom: '16px',
+                }}
+                className="relative z-10 space-y-2"
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end' }}>
+                  <span style={{ fontSize: '8px', textTransform: 'uppercase', fontWeight: 700, color: '#94a3b8' }}>
+                    Intensité Relative
+                  </span>
                   {stats.hasHistory ? (
-                    <span className={`text-[10px] font-bold ${stats.intensityRatio >= 100 ? 'text-success' : 'text-secondary'}`}>
+                    <span
+                      style={{
+                        fontSize: '10px',
+                        fontWeight: 700,
+                        color: stats.intensityRatio >= 100 ? '#10b981' : '#eab308',
+                      }}
+                    >
                       {stats.intensityRatio}%
                     </span>
                   ) : (
-                    <span className="text-[8px] font-bold text-secondary/50 italic">Ref. Initiale</span>
+                    <span style={{ fontSize: '8px', fontWeight: 700, color: '#64748b', fontStyle: 'italic' }}>
+                      Ref. Initiale
+                    </span>
                   )}
                 </div>
 
-                <div className="h-3 w-full bg-surface2 rounded-full overflow-hidden flex border border-white/5 relative">
-                  <div className="absolute left-1/2 top-0 bottom-0 w-px bg-white/20 z-20"></div>
+                <div
+                  style={{
+                    height: '10px',
+                    width: '100%',
+                    backgroundColor: '#1e293b',
+                    borderRadius: '9999px',
+                    overflow: 'hidden',
+                    display: 'flex',
+                    border: '1px solid rgba(255, 255, 255, 0.08)',
+                    position: 'relative',
+                  }}
+                >
+                  <div
+                    style={{
+                      position: 'absolute',
+                      left: '50%',
+                      top: 0,
+                      bottom: 0,
+                      width: '1px',
+                      backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                      zIndex: 20,
+                    }}
+                  />
                   {stats.hasHistory && (
                     <div
-                      className={`h-full rounded-full transition-all duration-1000 ${stats.intensityRatio >= 100 ? 'bg-gradient-to-r from-primary to-success' : 'bg-primary'}`}
-                      style={{ width: `${Math.min(stats.intensityRatio, 100)}%` }}
+                      style={{
+                        height: '100%',
+                        borderRadius: '9999px',
+                        backgroundColor: stats.intensityRatio >= 100 ? '#10b981' : '#eab308',
+                        width: `${Math.min(stats.intensityRatio, 100)}%`,
+                      }}
                     />
                   )}
                 </div>
 
                 {stats.hasHistory ? (
-                  <div className="text-[8px] text-secondary/70 italic text-center pt-1">"{getIntensityText(stats.intensityRatio)}"</div>
+                  <div style={{ fontSize: '8px', color: '#94a3b8', fontStyle: 'italic', textAlign: 'center', paddingTop: '4px' }}>
+                    "{getIntensityText(stats.intensityRatio)}"
+                  </div>
                 ) : (
-                  <div className="text-[8px] text-secondary/40 italic text-center pt-1">
+                  <div style={{ fontSize: '8px', color: '#64748b', fontStyle: 'italic', textAlign: 'center', paddingTop: '4px' }}>
                     Première séance de ce type.
                   </div>
                 )}
               </div>
 
               {/* EXERCISES LIST */}
-              <div className="space-y-4 relative z-10">
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }} className="relative z-10">
                 {session.exercises.map((ex, i) => {
                   const lib = library.find((l) => l.id === ex.exerciseId);
                   const isCardio = lib?.type === 'Cardio';
                   const isStatic = lib?.type === 'Statique' || lib?.type === 'Étirement';
 
                   return (
-                    <div key={i} className="space-y-1">
-                      <div className="flex justify-between items-baseline text-foreground">
-                        <div className="font-bold uppercase truncate pr-4 max-w-[85%] text-[11px]">
+                    <div key={i} style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                      <div
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'baseline',
+                          color: '#f8fafc',
+                        }}
+                      >
+                        <div
+                          style={{
+                            fontWeight: 700,
+                            textTransform: 'uppercase',
+                            fontSize: '11px',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            maxWidth: '82%',
+                          }}
+                        >
                           {i + 1}. {lib?.name || `ID ${ex.exerciseId}`}
                         </div>
-                        <div className="text-[8px] font-bold opacity-40 bg-surface2 px-1.5 rounded">
+                        <div
+                          style={{
+                            fontSize: '8px',
+                            fontWeight: 700,
+                            color: '#94a3b8',
+                            backgroundColor: '#1e293b',
+                            padding: '1px 6px',
+                            borderRadius: '4px',
+                            border: '1px solid rgba(255, 255, 255, 0.05)',
+                          }}
+                        >
                           {lib?.muscle.substring(0, 3).toUpperCase()}
                         </div>
                       </div>
 
-                      <div className="pl-2 space-y-0.5">
+                      <div style={{ paddingLeft: '8px', display: 'flex', flexDirection: 'column', gap: '2px' }}>
                         {ex.sets.map((set, j) => {
                           if (!set.done) return null;
 
@@ -341,15 +501,26 @@ export const SessionDetailModal: React.FC<SessionDetailModalProps> = ({ session,
                           }
 
                           return (
-                            <div key={j} className={`flex justify-between items-center ${set.isWarmup ? 'opacity-40 italic' : ''}`}>
-                              <div className="flex gap-2 items-center">
-                                <span className="text-secondary/50 font-bold text-[10px]">#{j + 1}</span>
+                            <div
+                              key={j}
+                              style={{
+                                display: 'flex',
+                                justifyContent: 'space-between',
+                                alignItems: 'center',
+                                fontSize: '11px',
+                                opacity: set.isWarmup ? 0.45 : 1,
+                                fontStyle: set.isWarmup ? 'italic' : 'normal',
+                                color: set.isWarmup ? '#94a3b8' : '#cbd5e1',
+                              }}
+                            >
+                              <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                <span style={{ color: '#64748b', fontWeight: 700, fontSize: '10px' }}>#{j + 1}</span>
                                 <span>{perfStr}</span>
                               </div>
-                              <div className="text-[9px] opacity-50 flex gap-2 font-bold">
-                                {set.isWarmup && <span>WARMUP</span>}
+                              <div style={{ fontSize: '9px', opacity: 0.7, display: 'flex', gap: '8px', fontWeight: 700 }}>
+                                {set.isWarmup && <span style={{ color: '#eab308' }}>WARMUP</span>}
                                 <span>{subStr}</span>
-                                {set.rir && !isCardio && <span className="text-secondary">@{set.rir}</span>}
+                                {set.rir && !isCardio && <span style={{ color: '#94a3b8' }}>@{set.rir}</span>}
                               </div>
                             </div>
                           );
@@ -361,87 +532,293 @@ export const SessionDetailModal: React.FC<SessionDetailModalProps> = ({ session,
               </div>
 
               {/* SOCIAL FOOTER */}
-              <div className="mt-6 pt-4 border-t border-dashed border-white/20 flex justify-between items-end relative z-10">
-                <div className="text-[8px] uppercase tracking-widest text-secondary/50">
-                  IronTracker <span className="text-foreground font-bold">v4.0.6</span>
+              <div
+                style={{
+                  marginTop: '20px',
+                  paddingTop: '14px',
+                  borderTop: '1px dashed rgba(255, 255, 255, 0.15)',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-end',
+                }}
+                className="relative z-10"
+              >
+                <div style={{ fontSize: '8px', textTransform: 'uppercase', letterSpacing: '0.15em', color: '#64748b' }}>
+                  IronTracker <span style={{ color: '#f8fafc', fontWeight: 700 }}>v4.0.6</span>
                 </div>
-                <div className="text-[8px] text-secondary/30 font-mono">#{session.id.slice(-6)}</div>
+                <div style={{ fontSize: '8px', color: '#475569', fontFamily: 'monospace' }}>#{session.id.slice(-6)}</div>
               </div>
             </div>
           ) : (
             /* STYLE 2: CARTE SOCIALE MODERNE */
-            <div className="bg-gradient-to-br from-slate-900 via-slate-950 to-black rounded-3xl p-6 text-foreground relative overflow-hidden shadow-2xl border border-slate-800">
-              {/* Subtle Ambient Light */}
-              <div className="absolute top-0 right-0 w-48 h-48 bg-primary/10 rounded-full blur-3xl pointer-events-none" />
+            <div
+              style={{
+                background: 'linear-gradient(145deg, #0b1120 0%, #020617 100%)',
+                color: '#ffffff',
+                fontFamily: "'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif",
+                borderRadius: '24px',
+                padding: '24px',
+                border: '1px solid #1e293b',
+                boxShadow: '0 25px 50px -12px rgba(0, 0, 0, 0.6)',
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
+              {/* Ambient Glow */}
+              <div
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  right: 0,
+                  width: '180px',
+                  height: '180px',
+                  background: 'radial-gradient(circle, rgba(234, 179, 8, 0.12) 0%, rgba(234, 179, 8, 0) 70%)',
+                  pointerEvents: 'none',
+                }}
+              />
 
               {/* Top Banner */}
-              <div className="flex justify-between items-start mb-5 relative z-10">
+              <div
+                style={{
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'flex-start',
+                  marginBottom: '20px',
+                  position: 'relative',
+                  zIndex: 10,
+                }}
+              >
                 <div>
-                  <span className="text-[10px] font-black uppercase tracking-widest text-primary bg-primary/10 px-2.5 py-1 rounded-full border border-primary/20">
+                  <span
+                    style={{
+                      fontSize: '10px',
+                      fontWeight: 900,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.1em',
+                      color: '#eab308',
+                      backgroundColor: 'rgba(234, 179, 8, 0.12)',
+                      padding: '4px 10px',
+                      borderRadius: '9999px',
+                      border: '1px solid rgba(234, 179, 8, 0.25)',
+                      display: 'inline-block',
+                    }}
+                  >
                     {session.programName}
                   </span>
-                  <h3 className="text-2xl font-black mt-2 tracking-tight uppercase text-white">{session.sessionName}</h3>
-                  <p className="text-xs text-slate-400 capitalize mt-0.5">{dateTimeInfo.fullDateStr}</p>
+                  <h3
+                    style={{
+                      fontSize: '22px',
+                      fontWeight: 900,
+                      marginTop: '8px',
+                      letterSpacing: '-0.025em',
+                      textTransform: 'uppercase',
+                      color: '#ffffff',
+                      lineHeight: 1.2,
+                    }}
+                  >
+                    {session.sessionName}
+                  </h3>
+                  <p style={{ fontSize: '12px', color: '#94a3b8', textTransform: 'capitalize', marginTop: '2px' }}>
+                    {dateTimeInfo.fullDateStr}
+                  </p>
                 </div>
-                <div className="w-9 h-9 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-primary font-black text-xs">
+                <div
+                  style={{
+                    width: '36px',
+                    height: '36px',
+                    borderRadius: '14px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.05)',
+                    border: '1px solid rgba(255, 255, 255, 0.12)',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    color: '#eab308',
+                    fontWeight: 900,
+                    fontSize: '12px',
+                  }}
+                >
                   IT
                 </div>
               </div>
 
               {/* Highlight Stats Grid */}
-              <div className="grid grid-cols-3 gap-2.5 mb-5 relative z-10">
-                <div className="bg-slate-800/50 backdrop-blur border border-slate-700/50 p-3 rounded-2xl">
-                  <div className="text-[10px] uppercase font-bold text-slate-400">Temps Total</div>
-                  <div className="text-xl font-black text-white mt-1">
-                    {stats.duration} <span className="text-xs font-normal text-slate-400">min</span>
+              <div
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(3, minmax(0, 1fr))',
+                  gap: '10px',
+                  marginBottom: '20px',
+                  position: 'relative',
+                  zIndex: 10,
+                }}
+              >
+                <div
+                  style={{
+                    backgroundColor: '#131d31',
+                    border: '1px solid #1e293b',
+                    padding: '12px',
+                    borderRadius: '16px',
+                  }}
+                >
+                  <div style={{ fontSize: '10px', textTransform: 'uppercase', fontWeight: 700, color: '#94a3b8' }}>
+                    Temps Total
+                  </div>
+                  <div style={{ fontSize: '18px', fontWeight: 900, color: '#ffffff', marginTop: '4px' }}>
+                    {stats.duration} <span style={{ fontSize: '11px', fontWeight: 400, color: '#94a3b8' }}>min</span>
                   </div>
                 </div>
 
-                <div className="bg-slate-800/50 backdrop-blur border border-slate-700/50 p-3 rounded-2xl">
-                  <div className="text-[10px] uppercase font-bold text-slate-400">Volume Total</div>
-                  <div className="text-xl font-black text-primary mt-1">
-                    {Math.round(stats.totalVolume)} <span className="text-xs font-normal text-slate-400">{weightUnit}</span>
+                <div
+                  style={{
+                    backgroundColor: '#131d31',
+                    border: '1px solid #1e293b',
+                    padding: '12px',
+                    borderRadius: '16px',
+                  }}
+                >
+                  <div style={{ fontSize: '10px', textTransform: 'uppercase', fontWeight: 700, color: '#94a3b8' }}>
+                    Volume Total
+                  </div>
+                  <div style={{ fontSize: '18px', fontWeight: 900, color: '#eab308', marginTop: '4px' }}>
+                    {Math.round(stats.totalVolume)}{' '}
+                    <span style={{ fontSize: '11px', fontWeight: 400, color: '#94a3b8' }}>{weightUnit}</span>
                   </div>
                 </div>
 
-                <div className="bg-slate-800/50 backdrop-blur border border-slate-700/50 p-3 rounded-2xl">
-                  <div className="text-[10px] uppercase font-bold text-slate-400">Séries Valides</div>
-                  <div className="text-xl font-black text-emerald-400 mt-1">{stats.totalSets}</div>
+                <div
+                  style={{
+                    backgroundColor: '#131d31',
+                    border: '1px solid #1e293b',
+                    padding: '12px',
+                    borderRadius: '16px',
+                  }}
+                >
+                  <div style={{ fontSize: '10px', textTransform: 'uppercase', fontWeight: 700, color: '#94a3b8' }}>
+                    Séries Valides
+                  </div>
+                  <div style={{ fontSize: '18px', fontWeight: 900, color: '#34d399', marginTop: '4px' }}>
+                    {stats.totalSets}
+                  </div>
                 </div>
               </div>
 
               {/* Muscles Badges */}
               {stats.musclesWorked.length > 0 && (
-                <div className="flex flex-wrap gap-1.5 mb-5 relative z-10">
+                <div
+                  style={{
+                    display: 'flex',
+                    flexWrap: 'wrap',
+                    gap: '6px',
+                    marginBottom: '20px',
+                    position: 'relative',
+                    zIndex: 10,
+                  }}
+                >
                   {stats.musclesWorked.map((m) => (
-                    <span key={m} className="text-[10px] font-bold bg-slate-800 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-700">
+                    <span
+                      key={m}
+                      style={{
+                        fontSize: '10px',
+                        fontWeight: 700,
+                        backgroundColor: '#1e293b',
+                        color: '#cbd5e1',
+                        padding: '4px 10px',
+                        borderRadius: '8px',
+                        border: '1px solid #334155',
+                      }}
+                    >
                       {m}
                     </span>
                   ))}
-                  <span className="text-[10px] font-bold bg-slate-800 text-slate-300 px-2.5 py-1 rounded-lg border border-slate-700">
+                  <span
+                    style={{
+                      fontSize: '10px',
+                      fontWeight: 700,
+                      backgroundColor: '#1e293b',
+                      color: '#cbd5e1',
+                      padding: '4px 10px',
+                      borderRadius: '8px',
+                      border: '1px solid #334155',
+                    }}
+                  >
                     RPE: {session.fatigue}/5
                   </span>
                 </div>
               )}
 
               {/* Top Exercises Summary */}
-              <div className="bg-slate-900/80 rounded-2xl p-3.5 border border-slate-800 space-y-2 relative z-10">
-                <div className="text-[10px] uppercase font-black tracking-wider text-slate-400">Exercices Principaux</div>
-                <div className="space-y-1.5">
+              <div
+                style={{
+                  backgroundColor: '#0f172a',
+                  borderRadius: '16px',
+                  padding: '14px',
+                  border: '1px solid #1e293b',
+                  position: 'relative',
+                  zIndex: 10,
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px',
+                }}
+              >
+                <div
+                  style={{
+                    fontSize: '10px',
+                    textTransform: 'uppercase',
+                    fontWeight: 900,
+                    letterSpacing: '0.05em',
+                    color: '#94a3b8',
+                  }}
+                >
+                  Exercices Principaux
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
                   {session.exercises.slice(0, 4).map((ex, idx) => {
                     const lib = library.find((l) => l.id === ex.exerciseId);
                     const doneSets = ex.sets.filter((s) => s.done && !s.isWarmup);
-                    const topSet = doneSets.length > 0 ? doneSets.reduce((prev, curr) => (parseFloat(curr.weight) || 0) > (parseFloat(prev.weight) || 0) ? curr : prev, doneSets[0]) : null;
+                    const topSet =
+                      doneSets.length > 0
+                        ? doneSets.reduce(
+                            (prev, curr) =>
+                              (parseFloat(curr.weight) || 0) > (parseFloat(prev.weight) || 0) ? curr : prev,
+                            doneSets[0]
+                          )
+                        : null;
 
                     return (
-                      <div key={idx} className="flex justify-between items-center text-xs">
-                        <span className="font-bold text-slate-200 truncate max-w-[65%]">{lib?.name || `Exercice ${idx + 1}`}</span>
+                      <div
+                        key={idx}
+                        style={{
+                          display: 'flex',
+                          justifyContent: 'space-between',
+                          alignItems: 'center',
+                          fontSize: '12px',
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontWeight: 700,
+                            color: '#e2e8f0',
+                            whiteSpace: 'nowrap',
+                            overflow: 'hidden',
+                            textOverflow: 'ellipsis',
+                            maxWidth: '65%',
+                          }}
+                        >
+                          {lib?.name || `Exercice ${idx + 1}`}
+                        </span>
                         {topSet ? (
-                          <span className="font-mono text-primary font-bold text-[11px]">
+                          <span
+                            style={{
+                              fontFamily: "'JetBrains Mono', monospace",
+                              color: '#eab308',
+                              fontWeight: 700,
+                              fontSize: '11px',
+                            }}
+                          >
                             {topSet.weight} {weightUnit} × {topSet.reps}
                           </span>
                         ) : (
-                          <span className="text-slate-500 text-[10px]">{ex.sets.length} séries</span>
+                          <span style={{ color: '#64748b', fontSize: '10px' }}>{ex.sets.length} séries</span>
                         )}
                       </div>
                     );
@@ -450,9 +827,23 @@ export const SessionDetailModal: React.FC<SessionDetailModalProps> = ({ session,
               </div>
 
               {/* Card Footer */}
-              <div className="mt-5 pt-3 border-t border-slate-800 flex justify-between items-center text-[10px] text-slate-500 font-bold relative z-10">
+              <div
+                style={{
+                  marginTop: '20px',
+                  paddingTop: '12px',
+                  borderTop: '1px solid #1e293b',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  fontSize: '10px',
+                  color: '#64748b',
+                  fontWeight: 700,
+                  position: 'relative',
+                  zIndex: 10,
+                }}
+              >
                 <span>IronTracker v4.0.6</span>
-                <span className="font-mono text-slate-400">#{session.id.slice(-6)}</span>
+                <span style={{ fontFamily: 'monospace', color: '#94a3b8' }}>#{session.id.slice(-6)}</span>
               </div>
             </div>
           )}

@@ -18,6 +18,7 @@ import { AppHeader } from './components/common/AppHeader';
 import { RestTimerOverlay } from './components/common/RestTimerOverlay';
 import { LoadingScreen } from './components/ui/LoadingScreen';
 import { WorkoutToolsModal } from './components/common/WorkoutToolsModal';
+import { ErrorBoundary } from './components/ui/ErrorBoundary';
 import { Icons } from './components/icons/Icons';
 
 // Lazy Features (Feature-Based Architecture)
@@ -241,27 +242,29 @@ export default function App() {
       <AppHeader session={session} timerString={timerString} restTarget={restTarget} restTime={restTime} setRestTarget={setRestTarget} />
 
       <main className="pt-20 px-4 max-w-lg mx-auto min-h-screen pb-12">
-        <Suspense fallback={<LoadingScreen />}>
-          <Routes>
-            <Route path="/" element={<DashboardView onStartSession={startSession} onOpenTools={() => setShowToolsModal(true)} />} />
-            <Route path="/workout" element={session ? <WorkoutView /> : <Navigate to="/" />} />
-            <Route path="/analytics" element={<AnalyticsView />} />
-            <Route
-              path="/programs"
-              element={
-                <ProgramsView onStartPreview={(name, sess) => setPreviewSession({ programName: name, session: sess, mode: 'active' })} />
-              }
-            />
-            <Route path="/programs/edit/:id" element={<ProgramEditorView />} />
-            <Route path="/library" element={<LibraryView />} />
-            <Route path="/settings" element={<SettingsView installPrompt={installPrompt} />} />
-            <Route path="/history" element={<HistoryHubView onStartSession={startSession} />} />
-            <Route path="/records" element={<Navigate to="/history?tab=records" replace />} />
-            <Route path="/history/edit/:id" element={<HistoryEditorView />} />
-            {/* Redirect old tools routes to Dashboard */}
-            <Route path="/tools/*" element={<Navigate to="/" replace />} />
-          </Routes>
-        </Suspense>
+        <ErrorBoundary>
+          <Suspense fallback={<LoadingScreen />}>
+            <Routes>
+              <Route path="/" element={<DashboardView onStartSession={startSession} onOpenTools={() => setShowToolsModal(true)} />} />
+              <Route path="/workout" element={session ? <WorkoutView /> : <Navigate to="/" />} />
+              <Route path="/analytics" element={<AnalyticsView />} />
+              <Route
+                path="/programs"
+                element={
+                  <ProgramsView onStartPreview={(name, sess) => setPreviewSession({ programName: name, session: sess, mode: 'active' })} />
+                }
+              />
+              <Route path="/programs/edit/:id" element={<ProgramEditorView />} />
+              <Route path="/library" element={<LibraryView />} />
+              <Route path="/settings" element={<SettingsView installPrompt={installPrompt} />} />
+              <Route path="/history" element={<HistoryHubView onStartSession={startSession} />} />
+              <Route path="/records" element={<Navigate to="/history?tab=records" replace />} />
+              <Route path="/history/edit/:id" element={<HistoryEditorView />} />
+              {/* Redirect old tools routes to Dashboard */}
+              <Route path="/tools/*" element={<Navigate to="/" replace />} />
+            </Routes>
+          </Suspense>
+        </ErrorBoundary>
       </main>
 
       {/* GLOBAL REST TIMER OVERLAY */}

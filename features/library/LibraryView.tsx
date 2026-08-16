@@ -1,14 +1,14 @@
 import React, { useState, useMemo } from 'react';
 import { useStore } from '../../store/useStore';
-import { LibraryExercise, ExerciseType } from '../../core/types';
+import { LibraryExercise } from '../../core/types';
 import { triggerHaptic } from '../../core/utils';
 import { Icons } from '../../components/icons/Icons';
 import { TYPE_COLORS } from '../../core/constants';
 import { EQUIPMENTS } from '../../core/data/equipments';
-import { EXERCISE_TYPE_LIST } from '../../core/data/exerciseTypes';
 import { Modal } from '../../components/ui/Modal';
 import { useConfirm } from '../../hooks/useConfirm';
 import { ExerciseDetailModal } from './components/ExerciseDetailModal';
+import { FilterSheetModal, FilterSheetType } from './components/FilterSheetModal';
 import { VirtualList } from '../../components/ui/VirtualList';
 import { EmptyState } from '../../components/ui/EmptyState';
 
@@ -28,44 +28,19 @@ const MUSCLE_ORDER = [
   'Cardio',
 ];
 
-// Configuration des cycles de filtres
-const MUSCLE_FILTERS = [null, ...MUSCLE_ORDER];
-
-const TYPE_FILTERS = [null, ...EXERCISE_TYPE_LIST];
-const TYPE_LABELS: Record<string, string> = {
-  Polyarticulaire: 'Poly.',
-  Isolation: 'Isol.',
-  Statique: 'Stat.',
-  Cardio: 'Card.',
-  Étirement: 'Etir.',
-};
-
-// Ordre optimisé pour les équipements les plus courants
-const EQUIP_FILTERS = [
-  null,
-  'BW',
-  'BB',
-  'DB',
-  'CB',
-  'EM', // Top 5
-  'SM',
-  'EZ',
-  'KB',
-  'RB',
-  'PL',
-  'TB',
-  'OT', // Reste
-];
-
 export const LibraryView: React.FC = () => {
   const library = useStore((s) => s.library);
   const setLibrary = useStore((s) => s.setLibrary);
   const confirm = useConfirm();
 
   const [libraryFilter, setLibraryFilter] = useState('');
-  const [typeFilterIdx, setTypeFilterIdx] = useState(0);
-  const [equipFilterIdx, setEquipFilterIdx] = useState(0);
-  const [muscleFilterIdx, setMuscleFilterIdx] = useState(0);
+  const [selectedMuscles, setSelectedMuscles] = useState<string[]>([]);
+  const [selectedTypes, setSelectedTypes] = useState<string[]>([]);
+  const [selectedEquipments, setSelectedEquipments] = useState<string[]>([]);
+  const [showFavoritesOnly, setShowFavoritesOnly] = useState(false);
+
+  // Active Bottom Sheet
+  const [activeSheet, setActiveSheet] = useState<FilterSheetType>(null);
 
   // States for Modals
   const [editingExercise, setEditingExercise] = useState<LibraryExercise | null>(null);
@@ -90,37 +65,55 @@ export const LibraryView: React.FC = () => {
     setLibrary((prev) => prev.map((l) => (l.id === id ? { ...l, isFavorite: !l.isFavorite } : l)));
   };
 
-  // --- Filter Logic ---
-  const activeType = TYPE_FILTERS[typeFilterIdx];
-  const activeEquip = EQUIP_FILTERS[equipFilterIdx];
-  const activeMuscle = MUSCLE_FILTERS[muscleFilterIdx];
+  // --- Filter Toggle Logic ---
+  const hasActiveFilters = Boolean(
+    selectedMuscles.length > 0 ||
+    selectedTypes.length > 0 ||
+    selectedEquipments.length > 0 ||
+    showFavoritesOnly ||
+    libraryFilter
+  );
 
-  const cycleType = () => {
+  const resetAllFilters = () => {
     triggerHaptic('click');
-    setTypeFilterIdx((prev) => (prev + 1) % TYPE_FILTERS.length);
+    setSelectedMuscles([]);
+    setSelectedTypes([]);
+    setSelectedEquipments([]);
+    setShowFavoritesOnly(false);
+    setLibraryFilter('');
   };
 
-  const cycleEquip = () => {
-    triggerHaptic('click');
-    setEquipFilterIdx((prev) => (prev + 1) % EQUIP_FILTERS.length);
+  const toggleMuscleFilter = (muscle: string) => {
+    setSelectedMuscles((prev) =>
+      prev.includes(muscle) ? prev.filter((m) => m !== muscle) : [...prev, muscle]
+    );
   };
 
-  const cycleMuscle = () => {
-    triggerHaptic('click');
-    setMuscleFilterIdx((prev) => (prev + 1) % MUSCLE_FILTERS.length);
+  const toggleTypeFilter = (type: string) => {
+    setSelectedTypes((prev) =>
+      prev.includes(type) ? prev.filter((t) => t !== type) : [...prev, type]
+    );
   };
 
-  // Reset rapide au clic long
-  const resetFilter = (setter: React.Dispatch<React.SetStateAction<number>>) => (e: React.MouseEvent) => {
-    e.preventDefault();
-    triggerHaptic('warning');
-    setter(0);
+  const toggleEquipmentFilter = (equip: string) => {
+    setSelectedEquipments((prev) =>
+      prev.includes(equip) ? prev.filter((e) => e !== equip) : [...prev, equip]
+    );
+  };
+
+  const resetFilterCategory = (category: 'muscle' | 'type' | 'equip') => {
+    if (category === 'muscle') setSelectedMuscles([]);
+    if (category === 'type') setSelectedTypes([]);
+    if (category === 'equip') setSelectedEquipments([]);
   };
 
   const filteredLibrary = useMemo(() => {
     return library
       .filter((l) => {
         if (l.isArchived) return false;
+
+        // Favorites filter
+        if (showFavoritesOnly && !l.isFavorite) return false;
 
         // Text Search
         if (libraryFilter) {
@@ -130,19 +123,19 @@ export const LibraryView: React.FC = () => {
           if (!matchName && !matchMuscle) return false;
         }
 
-        // Type Filter
-        if (activeType && l.type !== activeType) return false;
+        // Multi Type Filter
+        if (selectedTypes.length > 0 && !selectedTypes.includes(l.type)) return false;
 
-        // Equip Filter
-        if (activeEquip && l.equipment !== activeEquip) return false;
+        // Multi Equip Filter
+        if (selectedEquipments.length > 0 && !selectedEquipments.includes(l.equipment)) return false;
 
-        // Muscle Filter
-        if (activeMuscle && l.muscle !== activeMuscle) return false;
+        // Multi Muscle Filter
+        if (selectedMuscles.length > 0 && !selectedMuscles.includes(l.muscle)) return false;
 
         return true;
       })
       .sort((a, b) => (a.isFavorite === b.isFavorite ? a.name.localeCompare(b.name) : a.isFavorite ? -1 : 1));
-  }, [library, libraryFilter, activeType, activeEquip, activeMuscle]);
+  }, [library, libraryFilter, selectedTypes, selectedEquipments, selectedMuscles, showFavoritesOnly]);
 
   return (
     <div className="space-y-4 animate-fade-in pb-24 h-full flex flex-col">
@@ -151,31 +144,100 @@ export const LibraryView: React.FC = () => {
 
         {/* Filter Pills Group */}
         <div className="flex items-center gap-1.5 flex-shrink-0 overflow-x-auto no-scrollbar">
-          {/* Muscle Filter */}
+          {/* Reset All Filters Button */}
+          {hasActiveFilters && (
+            <button
+              onClick={resetAllFilters}
+              title="Réinitialiser tous les filtres"
+              className="h-7 w-7 flex items-center justify-center rounded-full bg-danger/15 text-danger hover:bg-danger/25 border border-danger/30 transition-all active:scale-90 flex-shrink-0 animate-fade-in"
+            >
+              <Icons.Reset size={12} strokeWidth={2.5} />
+            </button>
+          )}
+
+          {/* Muscle Filter Button */}
           <button
-            onClick={cycleMuscle}
-            onContextMenu={resetFilter(setMuscleFilterIdx)}
-            className={`h-7 px-2.5 rounded-full text-[9px] font-black uppercase transition-all border border-transparent whitespace-nowrap ${activeMuscle ? 'bg-primary text-background shadow-[0_0_10px_rgba(var(--primary),0.4)] scale-105' : 'bg-surface2 text-secondary hover:border-white/10'}`}
+            onClick={() => {
+              triggerHaptic('click');
+              setActiveSheet('muscle');
+            }}
+            title="Ouvrir les filtres de muscles"
+            className={`h-7 px-2.5 rounded-full text-[9px] font-black uppercase transition-all border whitespace-nowrap flex items-center gap-1 active:scale-95 ${
+              selectedMuscles.length > 0
+                ? 'bg-primary text-background border-primary shadow-[0_0_10px_rgba(var(--primary),0.4)] scale-105'
+                : 'bg-surface2 text-secondary border-transparent hover:border-white/10'
+            }`}
           >
-            {activeMuscle ? activeMuscle.substring(0, 4) : 'Musc.'}
+            <span>
+              {selectedMuscles.length === 0
+                ? 'Musc.'
+                : selectedMuscles.length === 1
+                  ? selectedMuscles[0].substring(0, 4)
+                  : `Musc. (${selectedMuscles.length})`}
+            </span>
+            <Icons.ChevronDown size={10} strokeWidth={3} className="opacity-70" />
           </button>
 
-          {/* Type Filter */}
+          {/* Type Filter Button */}
           <button
-            onClick={cycleType}
-            onContextMenu={resetFilter(setTypeFilterIdx)}
-            className={`h-7 px-2.5 rounded-full text-[9px] font-black uppercase transition-all border border-transparent whitespace-nowrap ${activeType ? 'bg-primary text-background shadow-[0_0_10px_rgba(var(--primary),0.4)] scale-105' : 'bg-surface2 text-secondary hover:border-white/10'}`}
+            onClick={() => {
+              triggerHaptic('click');
+              setActiveSheet('type');
+            }}
+            title="Ouvrir les filtres de types d'exercice"
+            className={`h-7 px-2.5 rounded-full text-[9px] font-black uppercase transition-all border whitespace-nowrap flex items-center gap-1 active:scale-95 ${
+              selectedTypes.length > 0
+                ? 'bg-primary text-background border-primary shadow-[0_0_10px_rgba(var(--primary),0.4)] scale-105'
+                : 'bg-surface2 text-secondary border-transparent hover:border-white/10'
+            }`}
           >
-            {activeType && typeof activeType === 'string' ? TYPE_LABELS[activeType] : 'Type'}
+            <span>
+              {selectedTypes.length === 0
+                ? 'Type'
+                : selectedTypes.length === 1
+                  ? selectedTypes[0].substring(0, 4)
+                  : `Type (${selectedTypes.length})`}
+            </span>
+            <Icons.ChevronDown size={10} strokeWidth={3} className="opacity-70" />
           </button>
 
-          {/* Equip Filter */}
+          {/* Equip Filter Button */}
           <button
-            onClick={cycleEquip}
-            onContextMenu={resetFilter(setEquipFilterIdx)}
-            className={`h-7 px-2.5 rounded-full text-[9px] font-black uppercase transition-all border border-transparent whitespace-nowrap ${activeEquip ? 'bg-primary text-background shadow-[0_0_10px_rgba(var(--primary),0.4)] scale-105' : 'bg-surface2 text-secondary hover:border-white/10'}`}
+            onClick={() => {
+              triggerHaptic('click');
+              setActiveSheet('equip');
+            }}
+            title="Ouvrir les filtres d'équipements"
+            className={`h-7 px-2.5 rounded-full text-[9px] font-black uppercase transition-all border whitespace-nowrap flex items-center gap-1 active:scale-95 ${
+              selectedEquipments.length > 0
+                ? 'bg-primary text-background border-primary shadow-[0_0_10px_rgba(var(--primary),0.4)] scale-105'
+                : 'bg-surface2 text-secondary border-transparent hover:border-white/10'
+            }`}
           >
-            {activeEquip ? activeEquip : 'Equip.'}
+            <span>
+              {selectedEquipments.length === 0
+                ? 'Equip.'
+                : selectedEquipments.length === 1
+                  ? selectedEquipments[0]
+                  : `Equip. (${selectedEquipments.length})`}
+            </span>
+            <Icons.ChevronDown size={10} strokeWidth={3} className="opacity-70" />
+          </button>
+
+          {/* Favorites Filter Toggle Button */}
+          <button
+            onClick={() => {
+              triggerHaptic('tick');
+              setShowFavoritesOnly(!showFavoritesOnly);
+            }}
+            title={showFavoritesOnly ? 'Afficher tous les exercices' : 'Afficher uniquement les favoris'}
+            className={`h-7 px-2 rounded-full text-[9px] font-black uppercase transition-all border whitespace-nowrap flex items-center gap-1 active:scale-95 ${
+              showFavoritesOnly
+                ? 'bg-gold/20 text-gold border-gold/40 shadow-[0_0_8px_rgba(245,158,11,0.3)]'
+                : 'bg-surface2 text-secondary border-transparent hover:border-white/10 hover:text-gold'
+            }`}
+          >
+            <Icons.Star size={11} className={showFavoritesOnly ? 'text-gold fill-gold' : ''} />
           </button>
 
           {/* Count Pill */}
@@ -222,15 +284,26 @@ export const LibraryView: React.FC = () => {
           itemHeight={72}
           gap={8}
           emptyMessage={
-            <EmptyState
-              icon={<Icons.Dumbbell />}
-              title="Aucun exercice"
-              subtitle={
-                libraryFilter || activeType || activeEquip || activeMuscle
-                  ? 'Aucun résultat pour ces filtres.'
-                  : 'La bibliothèque est vide.'
-              }
-            />
+            <div className="flex flex-col items-center justify-center p-4">
+              <EmptyState
+                icon={<Icons.Dumbbell />}
+                title="Aucun exercice"
+                subtitle={
+                  hasActiveFilters
+                    ? 'Aucun résultat correspondant aux critères de recherche et filtres.'
+                    : 'La bibliothèque est vide.'
+                }
+              />
+              {hasActiveFilters && (
+                <button
+                  onClick={resetAllFilters}
+                  className="mt-3 px-4 py-2 bg-surface2 hover:bg-surface2/80 text-primary rounded-xl text-xs font-bold uppercase tracking-wider flex items-center gap-2 border border-white/5 active:scale-95 transition-all shadow-sm"
+                >
+                  <Icons.Reset size={14} />
+                  <span>Réinitialiser les filtres</span>
+                </button>
+              )}
+            </div>
           }
           renderItem={(l) => (
             <div
@@ -260,7 +333,7 @@ export const LibraryView: React.FC = () => {
                       {l.type}
                     </span>
                     {/* Badge Équipement discret si filtre actif pour confirmer visuellement */}
-                    {activeEquip && (
+                    {selectedEquipments.length > 0 && (
                       <span className="text-[9px] uppercase font-bold px-1.5 py-0.5 rounded bg-surface2 text-white/50">{l.equipment}</span>
                     )}
                   </div>
@@ -408,6 +481,19 @@ export const LibraryView: React.FC = () => {
           </div>
         </Modal>
       )}
+      {/* Filter Bottom Sheet Modal */}
+      <FilterSheetModal
+        type={activeSheet}
+        onClose={() => setActiveSheet(null)}
+        selectedMuscles={selectedMuscles}
+        selectedTypes={selectedTypes}
+        selectedEquipments={selectedEquipments}
+        onToggleMuscle={toggleMuscleFilter}
+        onToggleType={toggleTypeFilter}
+        onToggleEquipment={toggleEquipmentFilter}
+        onResetCategory={resetFilterCategory}
+        muscleOptions={MUSCLE_ORDER}
+      />
     </div>
   );
 };

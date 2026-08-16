@@ -243,9 +243,39 @@ export const Icons = {
       <path d="M12 7v5l4 2" />
     </IconWrapper>
   ),
+  Reset: (props: IconProps) => (
+    <IconWrapper {...props}>
+      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+      <path d="M3 3v5h5" />
+    </IconWrapper>
+  ),
+  AlertTriangle: (props: IconProps) => (
+    <IconWrapper {...props}>
+      <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+      <line x1="12" y1="9" x2="12" y2="13" />
+      <line x1="12" y1="17" x2="12.01" y2="17" />
+    </IconWrapper>
+  ),
+  RotateCcw: (props: IconProps) => (
+    <IconWrapper {...props}>
+      <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8" />
+      <path d="M3 3v5h5" />
+    </IconWrapper>
+  ),
   Flame: (props: IconProps) => (
     <IconWrapper {...props}>
       <path d="M8.5 14.5A2.5 2.5 0 0 0 11 12c0-1.38-.5-2-1-3-1.072-2.143-.224-4.054 2-6 .5 2.5 2 4.9 4 6.5 2 1.6 3 3.5 3 5.5a7 7 0 1 1-14 0c0-1.153.433-2.294 1-3a2.5 2.5 0 0 0 2.5 2.5z" />
+    </IconWrapper>
+  ),
+  Zap: (props: IconProps) => (
+    <IconWrapper {...props}>
+      <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+    </IconWrapper>
+  ),
+  Award: (props: IconProps) => (
+    <IconWrapper {...props}>
+      <circle cx="12" cy="8" r="7" />
+      <polyline points="8.21 13.89 7 23 12 20 17 23 15.79 13.88" />
     </IconWrapper>
   ),
   Stopwatch: (props: IconProps) => (

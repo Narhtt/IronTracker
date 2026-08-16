@@ -345,6 +345,7 @@ export const useAnalyticsData = () => {
     isCardio,
 
     // Data
+    history,
     library,
     overviewStats,
     volFatigueData,

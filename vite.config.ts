@@ -50,7 +50,11 @@ export default defineConfig({
   define: {
     __APP_VERSION__: JSON.stringify(pkg.version),
   },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react-router-dom', 'zustand', 'recharts', 'html2canvas-pro'],
+  },
   resolve: {
+    dedupe: ['react', 'react-dom', 'react-router-dom', 'zustand'],
     alias: {
       '@': path.resolve(__dirname, '.'),
     },
