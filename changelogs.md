@@ -2,6 +2,8 @@
 
 ## [4.0.7] - 2026-08-16
 ### Production Release & Durcissement Final
+- **Refonte Ergonomique des Paramètres (Double Onglet)** :
+  - Découpage de la vue Configuration en deux espaces clairs : **⚙️ Préférences** (Apparence, retours haptiques, alertes de repos, unités kg/lbs, formule 1RM, disques de barre) et **💾 Données & Stockage** (Jauge de capacité, snapshots automatiques, archivage d'historique, export/import JSON et CSV, réinitialisation).
 - **Contrôle & UX du Stockage Local (Local-First)** :
   - Intégration d'une jauge de capacité temps réel dans les Paramètres affichant l'empreinte exacte sur les 5 Mo alloués par le navigateur.
   - Alerte contextuelle dynamique (>80% d'occupation) incitant à la sauvegarde globale JSON et à l'archivage préventif des séances historiques.
